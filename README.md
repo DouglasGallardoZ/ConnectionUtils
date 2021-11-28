@@ -1,2 +1,2 @@
 # ConnectionUtils
-Repositorio con herramientas de conexion a Base de Datos
+Repositorio con herramientas de conexion a Base de Datos MySQL
