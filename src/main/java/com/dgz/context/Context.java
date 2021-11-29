@@ -6,7 +6,8 @@ import java.sql.SQLException;
 
 public class Context {
     private static Connection con;
-    private static int status;
+    private int status;
+    private int rowCount;
 
     public Context(Connection con){
         this.con = con;
@@ -18,7 +19,7 @@ public class Context {
      * @param sentenceSql
      * @return
      */
-    public static int exec(String sentenceSql){
+    public int exec(String sentenceSql){
         status = 0;
         try {
             PreparedStatement preparedStmt = con.prepareStatement(sentenceSql);
@@ -29,6 +30,14 @@ public class Context {
             status = 1;
         }
         return status;
+    }
+
+    /**
+     * Retorna la cantidad de registros que devuelve una consulta
+     * @return
+     */
+    public int getRowCount(){
+        return this.rowCount;
     }
 
 

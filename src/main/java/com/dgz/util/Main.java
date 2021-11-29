@@ -12,7 +12,8 @@ public class Main {
         Connection con = ConnectionUtils.getConnection();
         Context context = new Context(con);
         String query = "TRUNCATE TABLE cliente";
-        context.exec(query);
+        //context.exec(query);
+        context.getRowCount();
 
     }
 }
