@@ -1,23 +1,23 @@
 package com.dgz.common;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Variable<T>{
 
     private String value;
+    private Object valueAsObject;
     private DataType type;
-    private String id;
+    private String name;
 
-    public Variable(String id, DataType type){
-        this.id = id;
+    public Variable(String name, DataType type){
+        this.name = name;
         this.type = type;
     }
 
-    public Variable(String id, DataType type, Object value){
-        this.id = id;
+    public Variable(String name, DataType type, Object value){
+        this.name = name;
         this.type = type;
+        this.valueAsObject = convertToCorrectType(value);
         this.value = value.toString();
     }
 
@@ -26,13 +26,16 @@ public class Variable<T>{
     }
 
     public String getValue() {
-        return value;
+        return value.toString();
     }
 
     public int getIntValue(){
-        return Integer.parseInt(this.value);
+        return Integer.parseInt(this.value.toString());
     }
 
+    public Timestamp getDateValue(){
+        return convertToDate(this.value.toString());
+    }
 
 
     //Metodos que convierten correctamente el tipo de dato
@@ -46,34 +49,40 @@ public class Variable<T>{
                 case STRING:
                     return value.toString();
                 case INTEGER:
-                    return Integer.parseInt(value.toString());
+                    return this.convertToInteger(value);
                 case DOUBLE:
                     return Double.parseDouble(value.toString());
                 case DATETIME:
-
-
+                    return this.convertToDate(value.toString());
             }
         }
         return null;
     }
 
-    private Date convertToDate(String dateTime) {
-
-        SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        Date date = null;
-        try {
-            date = dateParser.parse(dateTime);
-            System.out.println(date);
-
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            System.out.println(dateFormatter.format(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+    private Timestamp convertToDate(String dateTime) {
+        return Timestamp.valueOf(dateTime);
     }
 
+    private Integer convertToInteger(Object value){
+        if(value instanceof Integer){
+            return (Integer)value;
+        } else if(value instanceof Number){
+            return ((Number)value).intValue();
+        } else if(value instanceof String){
+            try{
+                double auxValue = Double.parseDouble((String)value);
+                return (int)auxValue;
+            } catch (NumberFormatException e){
+                System.out.println("Value: "+value.toString()+" no puede ser convertido en Integer");
+                throw new NumberFormatException();
+            }
+        } else {
+            System.out.println("Value: "+value.toString()+" no puede ser convertido en Integer");
+            throw new RuntimeException();
+
+        }
+
+    }
 
 
 
