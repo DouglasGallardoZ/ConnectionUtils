@@ -1,4 +1,4 @@
-package com.dgz;
+package com.clases;
 
 import com.dgz.context.Context;
 import com.dgz.util.ConnectionUtils;
