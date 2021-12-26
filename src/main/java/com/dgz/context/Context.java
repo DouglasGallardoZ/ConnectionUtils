@@ -5,15 +5,16 @@ import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Context {
     private static final Logger LOGGER = Logger.getLogger(Context.class);
-    private static Connection con;
+    private Connection con;
     private int status;
     private int rowCount;
     private Resulsets resulset;
-    private static PreparedStatement preparedStmt;
-    private static Statement statement;
+    private PreparedStatement preparedStmt;
+    private Statement statement;
 
 
     public Context(Connection con){
@@ -45,13 +46,13 @@ public class Context {
         return status;
     }
 
-    public int exec(String sentenceSql , Object... var) throws SQLException {
+    public int exec(String sentenceSql , Object... variable) throws SQLException {
         status = 0;
         int i =0;
 
         try {
             preparedStmt = con.prepareStatement(sentenceSql);
-            for (Object var2 : var){
+            for (Object var2 : variable){
                 i++;
                 preparedStmt.setString(i, var2.toString());
             }
@@ -72,36 +73,11 @@ public class Context {
 
     public int resulSet(String query) throws SQLException {
         status = 0;
-       // int i = 0;
-        ArrayList<String> listRow;
         try {
             statement = con.createStatement();
             ResultSet rs = statement.executeQuery (query);
 
-            resulset.setMetaData(rs.getMetaData());
-
-            while (rs.next()){
-                //i = 0;
-                listRow = new ArrayList<>();
-                try{
-                    for (int i = 0; i < rs.getMetaData().getColumnCount(); i++){
-                        listRow.add(rs.getString(i+1));
-                    }
-
-                    /*while (true){
-                        i++;
-                        listRow.add(rs.getString(i));
-                    }*/
-                } catch (SQLException e){
-                    e.printStackTrace();
-                    LOGGER.info("Carga de data exitosa");
-                }
-
-                resulset.getData().getRow().add(listRow);
-                rowCount++;
-
-            }
-
+            executeResulset(rs);
         } catch (SQLException e) {
             e.printStackTrace();
             status = 1;
@@ -115,38 +91,20 @@ public class Context {
     }
 
 
-    public int resulSet(String query, Object... var) throws SQLException {
+    public int resulSet(String query, Object... varviable) throws SQLException {
         status = 0;
-        int i = 0;
         int j = 0;
-        ArrayList<String> listRow;
+
         try {
             preparedStmt = con.prepareStatement(query);
-            for (Object var2 : var){
+            for (Object var2 : varviable){
                 j++;
                 preparedStmt.setString(j, var2.toString());
             }
             ResultSet rs = preparedStmt.executeQuery();
 
-            resulset.setMetaData(rs.getMetaData());
+            executeResulset(rs);
 
-            while (rs.next()){
-                i = 0;
-                listRow = new ArrayList<>();
-                try{
-                    while (true){
-                        i++;
-                        listRow.add(rs.getString(i));
-                    }
-                } catch (SQLException e){
-                    e.printStackTrace();
-                    LOGGER.info("Carga de data exitosa");
-                }
-
-                resulset.getData().getRow().add(listRow);
-                rowCount++;
-
-            }
         } catch (SQLException e) {
             e.printStackTrace();
             status = 1;
@@ -159,6 +117,23 @@ public class Context {
 
         return status;
     }
+
+    private void executeResulset(ResultSet rs) throws SQLException {
+        List<String >listRow = new ArrayList<>();
+        resulset.setMetaData(rs.getMetaData());
+
+        while (rs.next()){
+            listRow = new ArrayList<>();
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++){
+                listRow.add(rs.getString(i+1));
+            }
+            resulset.getData().getRow().add(listRow);
+            rowCount++;
+        }
+        LOGGER.info("Carga de data exitosa");
+
+    }
+
 
 
 

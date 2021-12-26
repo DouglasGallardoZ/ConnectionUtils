@@ -16,9 +16,9 @@ public class Main {
                 " 'Gallardo', '2000-07-11', 'H')";
         */
 
-       String query = "select * from cliente";
+       String query = "select * from cliente where cedula = ?";
 
-       context.resulSet(query);
+       context.resulSet(query, "0927587006");
 
         System.out.println(1);
 
