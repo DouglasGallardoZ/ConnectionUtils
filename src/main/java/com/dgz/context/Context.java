@@ -1,13 +1,10 @@
 package com.dgz.context;
 
-import com.dgz.common.Variable;
-import com.dgz.util.ConnectionUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Context {
     private static final Logger LOGGER = Logger.getLogger(Context.class);
