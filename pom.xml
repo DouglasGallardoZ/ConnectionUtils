@@ -5,12 +5,23 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.dgz</groupId>
-  <artifactId>ConnectionUtils</artifactId>
+  <artifactId>context</artifactId>
   <version>1.0-SNAPSHOT</version>
-
-  <name>ConnectionUtils</name>
+  <packaging>jar</packaging>
+  <name>context</name>
 
   <url>http://www.example.com</url>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub DouglasGallardoZ Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/DouglasGallardoZ/context</url>
+    </repository>
+  </distributionManagement>
+
+
+
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -107,6 +118,12 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
+          <configuration>
+            <source>8</source>
+            <target>8</target>
+          </configuration>
+
+
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
