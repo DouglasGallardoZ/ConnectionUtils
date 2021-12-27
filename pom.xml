@@ -16,7 +16,7 @@
     <repository>
       <id>github</id>
       <name>GitHub DouglasGallardoZ Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/DouglasGallardoZ/context</url>
+      <url>https://maven.pkg.github.com/DouglasGallardoZ/ConnectionUtils</url>
     </repository>
   </distributionManagement>
 
