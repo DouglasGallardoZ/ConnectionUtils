@@ -9,13 +9,13 @@ import java.sql.SQLException;
 public class ConnectionUtils {
 
     private static final Logger LOGGER = Logger.getLogger(ConnectionUtils.class);
-    private final static String USER = "root";
-    private final static String PASSWORD = "rootpw";
-    private final static String PORT = "3306";
+    private static final String USER = "root";
+    private static final String PASSWORD = "rootpw";
+    private static final String PORT = "3306";
 
     private static String jurl = "jdbc:mysql://localhost:"+PORT+"/prueba";
 
-
+    private ConnectionUtils(){}
 
     public static Connection getConnection(){
         BasicConfigurator.configure();

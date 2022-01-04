@@ -29,7 +29,7 @@ public class Resulsets {
     public void setMetaData(ResultSetMetaData meta) {
         try {
             int i = 0;
-            while(true){
+            while(i<meta.getColumnCount()){
                 i++;
                 metaData.add(meta.getColumnName(i));
             }

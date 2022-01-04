@@ -1,7 +1,5 @@
 package com.dgz.context;
 
-import com.dgz.common.Variable;
-import com.dgz.util.ConnectionUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -11,10 +9,12 @@ import java.util.List;
 
 public class Context {
     private static final Logger LOGGER = Logger.getLogger(Context.class);
-    private static Connection con;
+    private Connection con;
     private int status;
     private int rowCount;
     private Resulsets resulset;
+    private PreparedStatement preparedStmt;
+    private Statement statement;
 
 
     public Context(Connection con){
@@ -29,114 +29,111 @@ public class Context {
      * @param sentenceSql
      * @return
      */
-    public int exec(String sentenceSql){
+    public int exec(String sentenceSql) throws SQLException {
         status = 0;
         try {
-            PreparedStatement preparedStmt = con.prepareStatement(sentenceSql);
+            preparedStmt = con.prepareStatement(sentenceSql);
             preparedStmt.execute();
-            con.close();
+            preparedStmt.close();
             LOGGER.info("Sentencia ejecutada correctamente");
         } catch (SQLException e) {
             e.printStackTrace();
             status = 1;
+        }finally {
+            preparedStmt.close();
+            con.close();
         }
         return status;
     }
 
-    public int exec(String sentenceSql , Object... var){
+    public int exec(String sentenceSql , Object... variable) throws SQLException {
         status = 0;
         int i =0;
 
         try {
-            PreparedStatement preparedStmt = con.prepareStatement(sentenceSql);
-            for (Object var2 : var){
+            preparedStmt = con.prepareStatement(sentenceSql);
+            for (Object var2 : variable){
                 i++;
                 preparedStmt.setString(i, var2.toString());
             }
             preparedStmt.execute();
-            con.close();
             LOGGER.info("Sentencia ejecutada correctamente");
         } catch (SQLException e) {
             e.printStackTrace();
             status = 1;
+        }finally {
+            preparedStmt.close();
+            con.close();
+
         }
+
         return status;
     }
 
 
-    public int resulSet(String query){
+    public int resulSet(String query) throws SQLException {
         status = 0;
-        int i = 0;
-        ArrayList<String> listRow;
         try {
-            Statement s = con.createStatement();
-            ResultSet rs = s.executeQuery (query);
+            statement = con.createStatement();
+            ResultSet rs = statement.executeQuery (query);
 
-            resulset.setMetaData(rs.getMetaData());
-
-            while (rs.next()){
-                i = 0;
-                listRow = new ArrayList<>();
-                try{
-                    while (true){
-                        i++;
-                        listRow.add(rs.getString(i));
-                    }
-                } catch (SQLException e){
-                    LOGGER.info("Carga de data exitosa");
-                }
-
-                resulset.getData().getRow().add(listRow);
-                rowCount++;
-
-            }
-            con.close();
+            executeResulset(rs);
         } catch (SQLException e) {
             e.printStackTrace();
             status = 1;
         }
+        finally {
+            statement.close();
+            con.close();
+
+        }
         return status;
     }
 
 
-    public int resulSet(String query, Object... var){
+    public int resulSet(String query, Object... varviable) throws SQLException {
         status = 0;
-        int i = 0;
         int j = 0;
-        ArrayList<String> listRow;
+
         try {
-            PreparedStatement s = con.prepareStatement(query);
-            for (Object var2 : var){
+            preparedStmt = con.prepareStatement(query);
+            for (Object var2 : varviable){
                 j++;
-                s.setString(j, var2.toString());
+                preparedStmt.setString(j, var2.toString());
             }
-            ResultSet rs = s.executeQuery();
+            ResultSet rs = preparedStmt.executeQuery();
 
-            resulset.setMetaData(rs.getMetaData());
+            executeResulset(rs);
 
-            while (rs.next()){
-                i = 0;
-                listRow = new ArrayList<>();
-                try{
-                    while (true){
-                        i++;
-                        listRow.add(rs.getString(i));
-                    }
-                } catch (SQLException e){
-                    LOGGER.info("Carga de data exitosa");
-                }
-
-                resulset.getData().getRow().add(listRow);
-                rowCount++;
-
-            }
-            con.close();
         } catch (SQLException e) {
             e.printStackTrace();
             status = 1;
         }
+        finally {
+          preparedStmt.close();
+          con.close();
+
+        }
+
         return status;
     }
+
+    private void executeResulset(ResultSet rs) throws SQLException {
+        List<String >listRow = new ArrayList<>();
+        resulset.setMetaData(rs.getMetaData());
+
+        while (rs.next()){
+            listRow = new ArrayList<>();
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++){
+                listRow.add(rs.getString(i+1));
+            }
+            resulset.getData().getRow().add(listRow);
+            rowCount++;
+        }
+        LOGGER.info("Carga de data exitosa");
+
+    }
+
 
 
 

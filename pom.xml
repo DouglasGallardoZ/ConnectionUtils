@@ -5,12 +5,23 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.dgz</groupId>
-  <artifactId>ConnectionUtils</artifactId>
+  <artifactId>context</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>context</name>
 
-  <name>ConnectionUtils</name>
-  <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub DouglasGallardoZ Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/DouglasGallardoZ/ConnectionUtils</url>
+    </repository>
+  </distributionManagement>
+
+
+
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,12 +30,42 @@
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.4.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.0.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>4.0.0</version>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
@@ -48,6 +89,16 @@
       <version>8.0.19</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>2.17.0</version>
+      <scope>test</scope>
+    </dependency>
+
+
+
   </dependencies>
 
   <build>
@@ -67,6 +118,12 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
+          <configuration>
+            <source>8</source>
+            <target>8</target>
+          </configuration>
+
+
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
